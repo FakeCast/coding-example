@@ -1,54 +1,211 @@
-### Brief
+### Holidays Plan API
+I designed an API to controll the holidays plan.
 
-It's November, and everyone is planning their holiday vacation. But management is struggling! They need a solution to approve vacation requests while also ensuring that there are still enough employees in the office to achieve end-of-year goals.  
+I spent more or less 4 hours on this project.
+I implemented the Vacation Request creation/listing/approving/rejecting.
+What is missing?
+ - Worker request listing
+ - Worker remaining vacation days
+ - Manager list by worker
+ - Manager list of overlaping vacations
+ - More edge cases tests
+ - Friendly error messages
 
-Your task is to build one HTTP API that allows employees to make vacation requests, and another that provides managers with an overview of all vacation requests and allows them to decline or approve requests.
 
-### Tasks
+ I didn't implement any authorization/authentication process, but I was thinking about generating a token for managers/workers and this way we can define the access rights.
 
-- Implement assignment using:
-    - Language: Ruby
-    - Framework: Ruby On Rails
-- There should be API routes that allow workers to:
-    - See their requests
-        - Filter by status (approved, pending, rejected)
-    - See their number of remaining vacation days
-    - Make a new request if they have not exhausted their total limit (30 per year)
-- There should be API routes that allow managers to:
-    - See an overview of all requests
-        - Filter by pending and approved
-    - See an overview for each individual employee
-    - See an overview of overlapping requests
-    - Process an individual request and either approve or reject it
-- Write tests for your business logic
 
-Each request should, at minimum, have the following signature:
+
+## Technologies:
+  - Ruby 2.6.6
+  - Rails 6.1.4
+  - MySQL
+## GEMS
+  - RSpec
+  - FactoryBot
+  - ActiveModel serializers
+
+## How to run
+  clone the repo
+  run
+  ```ruby
+    bundle install
+    rake db:create db:migrate db:seed
+    rails s
+  ```
+## API Docs
+I could use Swager to document the API docs, but since is just a few endpoints I am going to add it to the README file
+
+---
+
+**List Vacation Requests**
+
+Return the list of vacation requests
+
+* **URL**
+
+  /api/v1/vacation_request
+
+* **Method:**
+
+  `GET`
+
+*  **URL Params**
+
+    **Optional:**
+
+      `status=approved/rejected/pending`
+
+ * **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:**
+
 ```
-{
-  "id": ENTITY_ID,
-  "author": WORKER_ID,
-  "status": STATUS_OPTION, // may be one of: "approved", "rejected", "pending"
-  "resolved_by": MANAGER_ID,
-  "request_created_at": "2020-08-09T12:57:13.506Z",
-  "vacation_start_date" "2020-08-24T00:00:00.000Z",
-  "vacation_end_date" "2020-09-04T00:00:00.000Z",
-}
+  [
+    {
+      "id": 2,
+      "author": 1,
+      "status": "pending",
+      "resolved_by": null,
+      "request_created_at": "2021-10-10T11:51:22.730Z",
+      "vacation_start_date": "2021-11-20T00:00:00.000+00:00",
+      "vacation_end_date": "2021-11-20T00:00:00.000+00:00"
+    }
+  ]
 ```
-You are expected to design any other required models and routes for your API.
 
-### Evaluation Criteria
+---
+**Show Vacation Requests**
 
-- Ruby best practices
-- Completeness: Did you include all features?
-- Correctness: Does the solution perform in a logical way?
-- Maintainability: Is the solution written in a clean, maintainable way?
-- Testing: Has the solution been adequately tested?
-- Documentation: Is the API well-documented?
+Show specific vacation request data
 
-### CodeSubmit
+* **URL**
 
-Please organize, design, test, and document your code as if it were going into production - then push your changes to the master branch. After you have pushed your code, you must submit the assignment via the assignment page.
+  /api/v1/vacation_request/:id
 
-All the best and happy coding,
+* **Method:**
 
-The Dampsoft Team
+  `GET`
+
+*  **URL Params**
+
+    **Optional:**
+
+    `id=[integer]`
+
+ * **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:**
+```
+  {
+    "id": 4,
+    "author": 1,
+    "status": "approved",
+    "resolved_by": 2,
+    "request_created_at": "2021-10-10T11:52:22.842Z",
+    "vacation_start_date": "2021-11-20T00:00:00.000+00:00",
+    "vacation_end_date": "2021-11-20T00:00:00.000+00:00"
+  }
+```
+
+---
+**Create Vacation Requests**
+
+Show specific vacation request data
+
+* **URL**
+
+  /api/v1/vacation_request/
+
+* **Method:**
+
+  `POST`
+
+* **Data Params**
+
+  `worker_id=[integer]`
+
+  `vacation_start_date=[date] //2021-11-10`
+
+  `vacation_end_date=[date] //2021-11-11`
+ * **Success Response:**
+
+  * **Code:** 201 <br />
+    **Content:**
+```
+  {
+    "id": 7,
+    "author": 1,
+    "status": "pending",
+    "resolved_by": null,
+    "request_created_at": "2021-10-11T10:38:24.945Z",
+    "vacation_start_date": "2021-11-08T00:00:00.000+00:00",
+    "vacation_end_date": "2021-11-08T00:00:00.000+00:00"
+  }
+```
+---
+
+**Approve Vacation Request**
+
+Show specific vacation request data
+
+* **URL**
+
+  /api/v1/vacation_request/:id/approve
+
+* **Method:**
+
+  `PUT`
+
+* **Data Params**
+
+  `resolved_by_id=[integer] // Must be a manager`
+ * **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:**
+```
+  {
+    "id": 4,
+    "author": 1,
+    "status": "approved",
+    "resolved_by": 2,
+    "request_created_at": "2021-10-10T11:52:22.842Z",
+    "vacation_start_date": "2021-11-20T00:00:00.000+00:00",
+    "vacation_end_date": "2021-11-20T00:00:00.000+00:00"
+  }
+```
+
+---
+**Reject Vacation Request**
+
+Show specific vacation request data
+
+* **URL**
+
+  /api/v1/vacation_request/:id/reject
+
+* **Method:**
+
+  `PUT`
+
+* **Data Params**
+
+  `resolved_by_id=[integer] // Must be a manager`
+ * **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:**
+```
+  {
+    "id": 4,
+    "author": 1,
+    "status": "rejected",
+    "resolved_by": 2,
+    "request_created_at": "2021-10-10T11:52:22.842Z",
+    "vacation_start_date": "2021-11-20T00:00:00.000+00:00",
+    "vacation_end_date": "2021-11-20T00:00:00.000+00:00"
+  }
+```
