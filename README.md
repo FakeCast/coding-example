@@ -1,4 +1,4 @@
-### Holidays Plan API
+# Holidays Plan API
 I designed an API to controll the holidays plan.
 
 I spent more or less 4 hours on this project.
@@ -20,11 +20,11 @@ What is missing?
   - Ruby 2.6.6
   - Rails 6.1.4
   - MySQL
-## GEMS
+## Gems
   - RSpec
   - FactoryBot
   - ActiveModel serializers
-
+---
 ## How to run
   clone the repo
   run
@@ -33,6 +33,12 @@ What is missing?
     rake db:create db:migrate db:seed
     rails s
   ```
+---
+## How to test
+`bundle exec rspec`
+
+---
+
 ## API Docs
 I could use Swager to document the API docs, but since is just a few endpoints I am going to add it to the README file
 
