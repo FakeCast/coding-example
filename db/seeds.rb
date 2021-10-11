@@ -7,5 +7,7 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-Worker.create(name: 'Doen', last_name: 'John', role: 'manager', email: 'john_doe@doe.com', vacation_days: '30')
-Worker.create(name: 'John', last_name: 'Doe', role: 'software_engineer', email: 'john_doe@doe.com', vacation_days: '30')
+Worker.create(name: 'Doen', last_name: 'John', role: 'manager', email: 'john_doe@doe.com')
+Worker.create(name: 'John', last_name: 'Doe', role: 'software_engineer', email: 'john_doe@doe.com')
+VacationRequest.create(vacation_start_date: '2021-11-10', vacation_end_date: '2021-11-14', worker_id: 2)
+VacationRequest.create(vacation_start_date: '2021-11-15', vacation_end_date: '2021-11-20', worker_id: 2)
